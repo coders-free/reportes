@@ -14,11 +14,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Excel;
-
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class InvoiceExport implements FromCollection, WithCustomStartCell, Responsable, WithMapping, WithColumnFormatting, WithHeadings, WithColumnWidths, WithStyles, WithDrawings
+class InvoiceExport implements FromCollection, WithCustomStartCell, Responsable, WithMapping, WithColumnFormatting, WithHeadings, WithColumnWidths, WithDrawings, WithStyles
 {
     use Exportable;
 
@@ -87,27 +86,83 @@ class InvoiceExport implements FromCollection, WithCustomStartCell, Responsable,
         ];
     }
 
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            10 => [
-                'font' => [
-                    'bold' => true,
-                ],
-            ],
-        ];
-    }
-
     public function drawings()
     {
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $drawing->setName('Coders Free');
-        $drawing->setDescription('Logo');
+        $drawing->setDescription('Coders Free');
         $drawing->setPath(public_path('img/logos/logo.png'));
         $drawing->setHeight(90);
-        $drawing->setCoordinates('A3');
+        $drawing->setCoordinates('B3');
 
         return $drawing;
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->setTitle('Invoices');
+        /* $sheet->mergeCells('B8:F8');
+        $sheet->setCellValue('B9', '=5+4'); */
+
+        /* $sheet->getStyle('A10:G10')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'name' => 'Arial',
+            ],
+            'alignment' => [
+                'horizontal' => 'center'
+            ],
+            'fill' => [
+                'fillType' => 'solid',
+                'startColor' => [
+                    'argb' => 'C5D9F1',
+                ],
+            ],
+        ]);
+
+
+        $sheet->getStyle('A10:G' . $sheet->getHighestRow())->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => 'thin',
+                ],
+            ],
+        ]);
+
+        $sheet->getStyle('A11')->applyFromArray([
+
+        ]); */
+
+        return [
+            'A10:G10' => [
+                'font' => [
+                    'bold' => true,
+                    'name' => 'Arial',
+                ],
+                'alignment' => [
+                    'horizontal' => 'center'
+                ],
+                'fill' => [
+                    'fillType' => 'solid',
+                    'startColor' => [
+                        'argb' => 'C5D9F1',
+                    ],
+                ],
+            ],
+
+            'A10:G' . $sheet->getHighestRow() => [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => 'thin',
+                    ],
+                ],
+            ],
+
+            'A11' => [
+
+            ],
+        ];
+
     }
 
 }
